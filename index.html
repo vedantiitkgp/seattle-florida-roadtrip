@@ -6,6 +6,9 @@
 <title>Seattle → Florida Winter Road Trip</title>
 <meta name="description" content="Live weather & road-safety dashboard for a Dec 2026 Seattle-to-Miami winter road trip. Daily National Weather Service forecasts, winter-storm alerts, and DOT live road links for every stop.">
 <link rel="preconnect" href="https://api.weather.gov">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400..600;1,9..144,400&family=Inter:wght@400;500;600;700&display=swap">
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
       integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
 <link rel="stylesheet" href="styles.css">
@@ -14,13 +17,22 @@
 <header class="hero">
   <div class="wrap">
     <p class="eyebrow">Winter road trip · Dec 2026 – Jan 2027</p>
-    <h1>Seattle&nbsp;→&nbsp;Florida</h1>
-    <p class="sub">A live weather &amp; road-safety dashboard. Daily forecasts and winter-storm
-      alerts come straight from the <strong>National Weather Service</strong>; road conditions
-      link to each state's official <strong>DOT 511</strong> feed. The cold legs through
-      <strong>Idaho</strong> and <strong>Colorado</strong> are flagged automatically.</p>
-    <p class="reroute-note">↻ Plan change: skipping Atlanta — now routing
-      <strong>Nashville → Asheville → Upstate SC → Charleston → Savannah → Florida</strong>.</p>
+    <h1>Seattle <span class="arr">→</span> Florida</h1>
+    <p class="sub">A live weather &amp; road-safety companion for the drive south. Daily forecasts and
+      winter-storm alerts come straight from the <strong>National Weather Service</strong>; road
+      conditions link to each state's official <strong>DOT 511</strong> feed. The cold legs through
+      Idaho and Colorado are flagged automatically.</p>
+
+    <ul class="stats">
+      <li><span class="n">16</span><span class="l">overnight stops</span></li>
+      <li><span class="n">11</span><span class="l">states</span></li>
+      <li><span class="n">~3,800</span><span class="l">miles</span></li>
+      <li><span class="n">7</span><span class="l">mountain watch points</span></li>
+    </ul>
+
+    <p class="reroute-note"><span class="tag">Plan change</span> Skipping Atlanta — now routing
+      Nashville → Asheville → Upstate SC → Charleston → Savannah → Florida.</p>
+
     <div class="hero-actions">
       <button id="refresh" class="btn">↻ Refresh weather</button>
       <span id="updated" class="updated"></span>
@@ -37,6 +49,7 @@
   <div id="tab-dashboard" class="tab-panel">
   <section id="map-section">
     <div class="map-btns">
+      <button id="places-btn" class="map-btn" title="Show / hide attractions">◆ Attractions</button>
       <button id="tag-btn" class="map-btn" title="Click the map to drop your own tags">📌 Tag</button>
       <button id="full-btn" class="map-btn" title="Expand map">⛶ Fullscreen</button>
       <button id="close-full" class="map-btn" hidden>✕ Close</button>
@@ -48,6 +61,7 @@
       <span><i class="dot dot-cold"></i> Cold / snow risk</span>
       <span><i class="dot dot-alert"></i> Active NWS alert</span>
       <span><i class="dot dot-watch"></i> Mountain pass / road watch</span>
+      <span><i class="dot dot-place"></i> Attraction</span>
     </div>
   </section>
 

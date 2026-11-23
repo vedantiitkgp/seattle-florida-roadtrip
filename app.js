@@ -69,58 +69,58 @@ const DOT = [
   { st: "Florida",        src: "FL511",            url: "https://fl511.com/" },
 ];
 
-// Curated iconic + scenic stops per overnight (travel order follows STOPS).
+// Curated iconic + scenic stops per overnight: [icon, name, blurb, lat, lon].
 const PLACES = {
-  "Seattle":        [["🏛","Pike Place Market","The original public market — fishmongers, the first Starbucks."],
-                     ["🌲","Kerry Park","Best skyline + Mt. Rainier viewpoint in the city."],
-                     ["🗼","Space Needle","360° observation deck over Puget Sound."]],
-  "Portland":       [["📚","Powell's City of Books","Largest independent bookstore in the world."],
-                     ["💧","Multnomah Falls","620-ft falls in the Columbia Gorge, just east on I-84."],
-                     ["🍩","Voodoo Doughnut","Portland's cult doughnut shop."]],
-  "Klamath Falls":  [["🏔","Crater Lake NP","Deepest lake in the US — snow-globe rim in winter (check road access)."],
-                     ["🚶","Link River Trail","Easy riverside walk with bird life."],
-                     ["🖼","Favell Museum","Western art & Native American artifacts."]],
-  "Boise":          [["🏛","Idaho State Capitol","Geothermally heated statehouse, free to tour."],
-                     ["🚲","Boise River Greenbelt","25-mi tree-lined path along the river."],
-                     ["⛷","Bogus Basin","Mountain rec area 45 min up — skiing & snow play."]],
-  "Salt Lake City": [["⛪","Temple Square","Historic LDS campus in the city center."],
-                     ["🦬","Antelope Island SP","Bison herds on a Great Salt Lake causeway."],
-                     ["🏔","Cottonwood Canyons","Big & Little Cottonwood — world-class snow 30 min away."]],
-  "Grand Junction": [["🪨","Colorado National Monument","Red-rock canyons & Rim Rock Drive."],
-                     ["🏔","Grand Mesa","Largest flat-top mountain on earth; snowy in winter."],
-                     ["🍷","Downtown Main Street","Walkable art-on-the-corner district & wineries."]],
-  "Denver":         [["🎸","Red Rocks","Amphitheatre in natural red sandstone — free to walk."],
-                     ["🚉","Union Station","Restored rail hall, bars & restaurants."],
-                     ["🏔","Rocky Mountain NP","Alpine park ~1.5 hr NW (winter-limited roads)."]],
-  "Salina":         [["🦁","Rolling Hills Zoo","Well-regarded zoo & wildlife museum."],
-                     ["🏛","Smoky Hill Museum","Free local history museum downtown."]],
-  "St. Louis":      [["🌉","Gateway Arch","630-ft arch with a tram to the top."],
-                     ["🌳","Forest Park","Bigger than Central Park — free zoo & art museum."],
-                     ["🏰","City Museum","Surreal playground built from salvage."]],
-  "Nashville":      [["🎶","Broadway Honky-Tonks","Live music bars end to end."],
-                     ["🎤","Grand Ole Opry","The home of country music."],
-                     ["🏛","Country Music Hall of Fame","The genre's definitive museum."]],
-  "Asheville":      [["🏰","Biltmore Estate","America's largest home, lit for the holidays."],
-                     ["🛣","Blue Ridge Parkway","Mountain overlooks (watch winter closures)."],
-                     ["🎨","River Arts District","Working studios & breweries."]],
-  "Greenville":     [["💧","Falls Park on the Reedy","Downtown waterfall & suspension bridge."],
-                     ["🚲","Swamp Rabbit Trail","Greenway from downtown to Travelers Rest."],
-                     ["🍽","Main Street","Tree-lined, award-winning walkable downtown."]],
-  "Charleston":     [["🌈","Rainbow Row & Battery","Pastel row houses & harborfront promenade."],
-                     ["🏰","Fort Sumter","Ferry to where the Civil War began."],
-                     ["🌳","Waterfront Park","Pineapple fountain & pier swings."]],
-  "Savannah":       [["🌳","Forsyth Park","Spanish-moss oaks & the famous fountain."],
-                     ["🏛","Historic Squares","22 leafy squares to wander."],
-                     ["🚢","River Street","Cobblestone riverfront, shops & candy."]],
-  "St. Augustine":  [["🏰","Castillo de San Marcos","1600s Spanish stone fort on the bay."],
-                     ["🚶","St. George Street","Pedestrian old-town lane."],
-                     ["💡","St. Augustine Lighthouse","Climb for coastal views."]],
-  "Orlando":        [["🎢","Walt Disney World","The big one — four parks."],
-                     ["🧙","Universal Orlando","Harry Potter & thrill rides."],
-                     ["🚀","Kennedy Space Center","Rocket history ~1 hr east on the coast."]],
-  "Miami":          [["🏖","South Beach","Art-deco strip & the ocean — journey's end."],
-                     ["🎨","Wynwood Walls","Open-air street-art district."],
-                     ["🎺","Little Havana / Calle Ocho","Cuban cafés, cigars & domino park."]],
+  "Seattle":        [["🏛","Pike Place Market","The original public market — fishmongers, the first Starbucks.",47.6097,-122.3417],
+                     ["🌲","Kerry Park","Best skyline + Mt. Rainier viewpoint in the city.",47.6295,-122.3599],
+                     ["🗼","Space Needle","360° observation deck over Puget Sound.",47.6205,-122.3493]],
+  "Portland":       [["📚","Powell's City of Books","Largest independent bookstore in the world.",45.5230,-122.6814],
+                     ["💧","Multnomah Falls","620-ft falls in the Columbia Gorge, just east on I-84.",45.5762,-122.1158],
+                     ["🍩","Voodoo Doughnut","Portland's cult doughnut shop.",45.5226,-122.6731]],
+  "Klamath Falls":  [["🏔","Crater Lake NP","Deepest lake in the US — snow-globe rim in winter (check road access).",42.9446,-122.1090],
+                     ["🚶","Link River Trail","Easy riverside walk with bird life.",42.2360,-121.7930],
+                     ["🖼","Favell Museum","Western art & Native American artifacts.",42.2258,-121.7920]],
+  "Boise":          [["🏛","Idaho State Capitol","Geothermally heated statehouse, free to tour.",43.6177,-116.1996],
+                     ["🚲","Boise River Greenbelt","25-mi tree-lined path along the river.",43.6007,-116.1930],
+                     ["⛷","Bogus Basin","Mountain rec area 45 min up — skiing & snow play.",43.7640,-116.1010]],
+  "Salt Lake City": [["⛪","Temple Square","Historic LDS campus in the city center.",40.7707,-111.8926],
+                     ["🦬","Antelope Island SP","Bison herds on a Great Salt Lake causeway.",40.9517,-112.2177],
+                     ["🏔","Cottonwood Canyons","Big & Little Cottonwood — world-class snow 30 min away.",40.5830,-111.6556]],
+  "Grand Junction": [["🪨","Colorado National Monument","Red-rock canyons & Rim Rock Drive.",39.0542,-108.6890],
+                     ["🏔","Grand Mesa","Largest flat-top mountain on earth; snowy in winter.",39.0333,-108.0520],
+                     ["🍷","Downtown Main Street","Walkable art-on-the-corner district & wineries.",39.0686,-108.5650]],
+  "Denver":         [["🎸","Red Rocks","Amphitheatre in natural red sandstone — free to walk.",39.6655,-105.2053],
+                     ["🚉","Union Station","Restored rail hall, bars & restaurants.",39.7531,-105.0001],
+                     ["🏔","Rocky Mountain NP","Alpine park ~1.5 hr NW (winter-limited roads).",40.3428,-105.6836]],
+  "Salina":         [["🦁","Rolling Hills Zoo","Well-regarded zoo & wildlife museum.",38.9360,-97.7600],
+                     ["🏛","Smoky Hill Museum","Free local history museum downtown.",38.8400,-97.6110]],
+  "St. Louis":      [["🌉","Gateway Arch","630-ft arch with a tram to the top.",38.6247,-90.1848],
+                     ["🌳","Forest Park","Bigger than Central Park — free zoo & art museum.",38.6357,-90.2847],
+                     ["🏰","City Museum","Surreal playground built from salvage.",38.6330,-90.2010]],
+  "Nashville":      [["🎶","Broadway Honky-Tonks","Live music bars end to end.",36.1612,-86.7775],
+                     ["🎤","Grand Ole Opry","The home of country music.",36.2069,-86.6922],
+                     ["🏛","Country Music Hall of Fame","The genre's definitive museum.",36.1584,-86.7760]],
+  "Asheville":      [["🏰","Biltmore Estate","America's largest home, lit for the holidays.",35.5401,-82.5515],
+                     ["🛣","Blue Ridge Parkway","Mountain overlooks (watch winter closures).",35.5912,-82.4760],
+                     ["🎨","River Arts District","Working studios & breweries.",35.5860,-82.5720]],
+  "Greenville":     [["💧","Falls Park on the Reedy","Downtown waterfall & suspension bridge.",34.8443,-82.4016],
+                     ["🚲","Swamp Rabbit Trail","Greenway from downtown to Travelers Rest.",34.8520,-82.3990],
+                     ["🍽","Main Street","Tree-lined, award-winning walkable downtown.",34.8510,-82.3990]],
+  "Charleston":     [["🌈","Rainbow Row & Battery","Pastel row houses & harborfront promenade.",32.7703,-79.9289],
+                     ["🏰","Fort Sumter","Ferry to where the Civil War began.",32.7523,-79.8747],
+                     ["🌳","Waterfront Park","Pineapple fountain & pier swings.",32.7793,-79.9254]],
+  "Savannah":       [["🌳","Forsyth Park","Spanish-moss oaks & the famous fountain.",32.0520,-81.0960],
+                     ["🏛","Historic Squares","22 leafy squares to wander.",32.0760,-81.0912],
+                     ["🚢","River Street","Cobblestone riverfront, shops & candy.",32.0812,-81.0912]],
+  "St. Augustine":  [["🏰","Castillo de San Marcos","1600s Spanish stone fort on the bay.",29.8979,-81.3114],
+                     ["🚶","St. George Street","Pedestrian old-town lane.",29.8945,-81.3135],
+                     ["💡","St. Augustine Lighthouse","Climb for coastal views.",29.8853,-81.2886]],
+  "Orlando":        [["🎢","Walt Disney World","The big one — four parks.",28.3852,-81.5639],
+                     ["🧙","Universal Orlando","Harry Potter & thrill rides.",28.4753,-81.4680],
+                     ["🚀","Kennedy Space Center","Rocket history ~1 hr east on the coast.",28.5729,-80.6490]],
+  "Miami":          [["🏖","South Beach","Art-deco strip & the ocean — journey's end.",25.7826,-80.1300],
+                     ["🎨","Wynwood Walls","Open-air street-art district.",25.8010,-80.1990],
+                     ["🎺","Little Havana / Calle Ocho","Cuban cafés, cigars & domino park.",25.7653,-80.2190]],
 };
 
 const COLD_HARD = 20;   // °F — hard freeze
@@ -214,9 +214,37 @@ function buildMap() {
   const bounds = L.latLngBounds(STOPS.map(s => [s.lat, s.lon]));
   map.fitBounds(bounds.pad(0.12));
 
+  const placeLayer = buildPlaces(map);
   setupFullscreen(map);
   setupTagging(map);
+  setupPlacesToggle(map, placeLayer);
   return map;
+}
+
+/* ---- curated attraction markers (toggleable, on by default) ---- */
+function buildPlaces(map) {
+  const layer = L.layerGroup();
+  STOPS.forEach(s => (PLACES[s.name] || []).forEach(([icon, name, blurb, lat, lon]) => {
+    if (typeof lat !== "number") return;
+    L.circleMarker([lat, lon], {
+      radius: 5, color: "#07100f", weight: 1, fillColor: "#2dd4bf", fillOpacity: 1,
+    }).addTo(layer).bindPopup(
+      `<div class="pop-name">${icon} ${esc(name)}</div>
+       <div class="pop-meta">${esc(blurb)}<br>${esc(s.name)}, ${s.state} ·
+       <a href="https://www.google.com/maps/search/${encodeURIComponent(name + " " + s.name + " " + s.state)}" target="_blank" rel="noopener">Open in Maps →</a></div>`);
+  }));
+  return layer.addTo(map);
+}
+
+function setupPlacesToggle(map, layer) {
+  const btn = $("#places-btn");
+  let on = true;
+  btn.classList.add("on");
+  btn.addEventListener("click", () => {
+    on = !on;
+    on ? layer.addTo(map) : map.removeLayer(layer);
+    btn.classList.toggle("on", on);
+  });
 }
 
 /* ---- fullscreen modal ---- */
