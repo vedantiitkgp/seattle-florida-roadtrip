@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Seattle → Florida Winter Road Trip</title>
+<meta name="description" content="Live weather & road-safety dashboard for a Dec 2026 Seattle-to-Miami winter road trip. Daily National Weather Service forecasts, winter-storm alerts, and DOT live road links for every stop.">
+<link rel="preconnect" href="https://api.weather.gov">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+      integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<header class="hero">
+  <div class="wrap">
+    <p class="eyebrow">Winter road trip · Dec 2026 – Jan 2027</p>
+    <h1>Seattle&nbsp;→&nbsp;Florida</h1>
+    <p class="sub">A live weather &amp; road-safety dashboard. Daily forecasts and winter-storm
+      alerts come straight from the <strong>National Weather Service</strong>; road conditions
+      link to each state's official <strong>DOT 511</strong> feed. The cold legs through
+      <strong>Idaho</strong> and <strong>Colorado</strong> are flagged automatically.</p>
+    <p class="reroute-note">↻ Plan change: skipping Atlanta — now routing
+      <strong>Nashville → Asheville → Upstate SC → Charleston → Savannah → Florida</strong>.</p>
+    <div class="hero-actions">
+      <button id="refresh" class="btn">↻ Refresh weather</button>
+      <span id="updated" class="updated"></span>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+  <section id="map-section">
+    <div id="map" role="application" aria-label="Route map"></div>
+    <div class="legend">
+      <span><i class="dot dot-start"></i> Start / end</span>
+      <span><i class="dot dot-ok"></i> Overnight stop</span>
+      <span><i class="dot dot-cold"></i> Cold / snow risk</span>
+      <span><i class="dot dot-alert"></i> Active NWS alert</span>
+      <span><i class="dot dot-watch"></i> Mountain pass / road watch</span>
+    </div>
+  </section>
+
+  <section id="alerts-section" hidden>
+    <h2>⚠ Active winter alerts on the route</h2>
+    <div id="alerts-list"></div>
+  </section>
+
+  <section>
+    <h2>Daily weather by stop</h2>
+    <p class="hint">Forecasts reach ~7 days out. Each stop updates to its real travel-day outlook
+      as the trip date enters the window — until then it shows the current forecast at that
+      location, so you can watch the cold build.</p>
+    <div id="cards" class="cards"></div>
+  </section>
+
+  <section>
+    <h2>Mountain passes &amp; road-closure watch points</h2>
+    <p class="hint">High-elevation segments that close for snow. Always confirm live status on the
+      official DOT feed before driving the leg.</p>
+    <div id="watch" class="watch-grid"></div>
+  </section>
+
+  <section id="dot-section">
+    <h2>State road-condition feeds (511)</h2>
+    <div id="dot-list" class="dot-list"></div>
+  </section>
+</main>
+
+<footer class="wrap">
+  <p>Weather data © NOAA / National Weather Service (<a href="https://api.weather.gov">api.weather.gov</a>),
+     a public-domain US government service. Road status is sourced from each state's DOT.
+     Forecasts are advisory — confirm road closures on the official feeds before travel.</p>
+</footer>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+        integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+<script src="app.js"></script>
+</body>
+</html>
