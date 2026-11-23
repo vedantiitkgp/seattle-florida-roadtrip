@@ -57,7 +57,23 @@ section { margin: 0 0 40px; }
 h2 { font-size: 1.3rem; margin: 0 0 6px; }
 .hint { color: var(--muted); font-size: .9rem; margin: 2px 0 16px; }
 
+#map-section { position: relative; }
 #map { height: 460px; border-radius: var(--radius); border: 1px solid var(--line); z-index: 0; }
+.map-btns { position: absolute; top: 12px; right: 12px; z-index: 500; display: flex; gap: 8px; }
+.map-btn { background: var(--panel); border: 1px solid var(--line); color: var(--ink);
+  border-radius: 8px; padding: 6px 10px; cursor: pointer; font-size: .85rem; box-shadow: 0 1px 4px rgba(0,0,0,.25); }
+.map-btn:hover { border-color: var(--accent); }
+.map-btn.on { background: var(--accent); color: #fff; border-color: var(--accent); }
+#map-section.full { position: fixed; inset: 0; z-index: 1000; margin: 0; padding: 12px;
+  background: var(--bg); display: flex; flex-direction: column; }
+#map-section.full #map { flex: 1; height: auto; border-radius: 10px; }
+#map-section.full .legend { padding: 10px 4px 2px; margin-top: 8px; }
+
+.wstatus { margin: 6px 0; }
+.wbadge { font-size: .82rem; font-weight: 600; display: inline-block; }
+.wbadge.ok { color: var(--ok); }
+.wbadge.advisory { color: var(--cold); }
+.wbadge.warn { color: var(--alert); }
 .leaflet-popup-content { font: 14px/1.4 system-ui, sans-serif; }
 .pop-name { font-weight: 700; margin-bottom: 2px; }
 .pop-meta { color: #555; font-size: 12px; }
@@ -93,8 +109,9 @@ h2 { font-size: 1.3rem; margin: 0 0 6px; }
 .temp { font-size: 1.7rem; font-weight: 700; line-height: 1; }
 .now-txt { font-size: .86rem; color: var(--muted); }
 .strip { display: flex; gap: 6px; margin-top: 2px; }
-.strip .d { flex: 1; text-align: center; background: var(--panel-2); border-radius: 8px; padding: 6px 2px; font-size: .74rem; }
+.strip .d { flex: 1 1 0; min-width: 0; text-align: center; background: var(--panel-2); border-radius: 8px; padding: 6px 2px; font-size: .74rem; }
 .strip .d b { display: block; font-size: .8rem; color: var(--ink); }
+.strip .d span { display: block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: var(--muted); }
 .strip .d.cold b { color: var(--cold); }
 .alert-banner { background: rgba(239,75,75,.14); border: 1px solid var(--alert); color: var(--ink);
   border-radius: 8px; padding: 8px 10px; font-size: .82rem; }

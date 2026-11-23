@@ -11,7 +11,9 @@
 const STOPS = [
   { name: "Seattle",        state: "WA", lat: 47.6062,  lon: -122.3321, date: "Dec 16", role: "start" },
   { name: "Portland",       state: "OR", lat: 45.5152,  lon: -122.6784, date: "Dec 16" },
-  { name: "Boise",          state: "ID", lat: 43.6150,  lon: -116.2023, date: "Dec 17", cold: true,
+  { name: "Klamath Falls",  state: "OR", lat: 42.2249,  lon: -121.7817, date: "Dec 17 · pickup", cold: true,
+    note: "Pickup point. High desert ~4,100 ft — US-97/US-20 toward Bend can be snowy/icy." },
+  { name: "Boise",          state: "ID", lat: 43.6150,  lon: -116.2023, date: "Dec 18", cold: true,
     note: "Snake River Plain — I-84 ice/freezing fog common." },
   { name: "Salt Lake City", state: "UT", lat: 40.7608,  lon: -111.8910, date: "Dec 18", cold: true,
     note: "Wasatch Front inversions; I-80/I-15 snow." },
@@ -118,6 +120,8 @@ async function fetchStop(s) {
 /* ------------------------------ rendering ------------------------------ */
 const $ = sel => document.querySelector(sel);
 const markers = {};
+const watchMarkers = {};
+const esc = s => String(s).replace(/[&<>"]/g, c => ({ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;" }[c]));
 
 function dotColor(s, w) {
   if (w && w.alerts && w.alerts.length) return "var(--alert)";
@@ -146,7 +150,7 @@ function buildMap() {
   });
 
   WATCH.forEach(w => {
-    L.circleMarker([w.lat, w.lon], {
+    watchMarkers[w.id] = L.circleMarker([w.lat, w.lon], {
       radius: 6, color: "#0b0e13", weight: 1, fillColor: "#c678dd", fillOpacity: 1,
     }).addTo(map).bindPopup(
       `<div class="pop-name">${w.id} · ${w.name}</div>
@@ -155,7 +159,60 @@ function buildMap() {
 
   const bounds = L.latLngBounds(STOPS.map(s => [s.lat, s.lon]));
   map.fitBounds(bounds.pad(0.12));
+
+  setupFullscreen(map);
+  setupTagging(map);
   return map;
+}
+
+/* ---- fullscreen modal ---- */
+function setupFullscreen(map) {
+  const sec = $("#map-section"), full = $("#full-btn"), close = $("#close-full");
+  const open = on => {
+    sec.classList.toggle("full", on);
+    full.hidden = on; close.hidden = !on;
+    setTimeout(() => map.invalidateSize(), 80);
+  };
+  full.addEventListener("click", () => open(true));
+  close.addEventListener("click", () => open(false));
+  document.addEventListener("keydown", e => { if (e.key === "Escape" && sec.classList.contains("full")) open(false); });
+}
+
+/* ---- user tagging (persisted in localStorage) ---- */
+const TAGS_KEY = "rt_tags";
+let tags = (() => { try { return JSON.parse(localStorage.getItem(TAGS_KEY) || "[]"); } catch { return []; } })();
+let tagging = false;
+function persistTags() { try { localStorage.setItem(TAGS_KEY, JSON.stringify(tags.map(({ _mk, ...r }) => r))); } catch {} }
+
+function setupTagging(map) {
+  const layer = L.layerGroup().addTo(map);
+  const btn = $("#tag-btn");
+  const draw = t => {
+    t._mk = L.marker([t.lat, t.lng]).addTo(layer).bindPopup(
+      `<div class="pop-name">📌 ${esc(t.label)}</div>
+       <button class="map-btn" onclick="removeTag('${t.id}')">Remove</button>`);
+  };
+  tags.forEach(draw);
+  window.removeTag = id => {
+    const t = tags.find(x => x.id === id);
+    if (t && t._mk) layer.removeLayer(t._mk);
+    tags = tags.filter(x => x.id !== id);
+    persistTags();
+  };
+  btn.addEventListener("click", () => {
+    tagging = !tagging;
+    btn.classList.toggle("on", tagging);
+    $("#map").style.cursor = tagging ? "crosshair" : "";
+    btn.textContent = tagging ? "📌 Tagging — click map" : "📌 Tag";
+  });
+  map.on("click", e => {
+    if (!tagging) return;
+    const label = prompt("Tag this spot (e.g. 'Fuel stop', 'Icy — avoid', 'Lunch'):");
+    if (!label) return;
+    const t = { id: Date.now().toString(36) + Math.random().toString(36).slice(2, 5),
+      lat: +e.latlng.lat.toFixed(4), lng: +e.latlng.lng.toFixed(4), label };
+    tags.push(t); draw(t); persistTags();
+  });
 }
 
 function stopCard(s) {
@@ -179,10 +236,9 @@ function fillCard(s, w) {
   if (cls.wintry) badges.push(`<span class="badge snow">Snow / ice</span>`);
   if (w.alerts.length) badges.push(`<span class="badge alert">${w.alerts.length} alert${w.alerts.length>1?"s":""}</span>`);
 
-  const strip = w.periods.slice(0, 6).map(p => {
+  const strip = w.periods.slice(0, 5).map(p => {
     const c = typeof p.temperature === "number" && p.temperature <= COLD_FREEZE ? " cold" : "";
-    const label = p.name.length > 9 ? p.name.slice(0, 9) : p.name;
-    return `<div class="d${c}"><b>${p.temperature}°</b>${label}</div>`;
+    return `<div class="d${c}"><b>${p.temperature}°</b><span>${p.name}</span></div>`;
   }).join("");
 
   const alertBanner = w.alerts.length
@@ -223,6 +279,29 @@ function failCard(s, msg) {
     `<span class="err">Forecast unavailable (${msg}). <a href="https://forecast.weather.gov/MapClick.php?lat=${s.lat}&lon=${s.lon}" target="_blank" rel="noopener">Open NWS →</a></span>`;
 }
 
+/* Live road-segment monitor: active NWS alerts at each watch point.
+ * NWS has no closure API, but Winter Storm/Ice Warnings at a pass are the
+ * authoritative heads-up; the DOT link stays for actual closure status. */
+async function fetchWatch(w) {
+  const al = await nws(`/alerts/active?point=${w.lat},${w.lon}`).catch(() => null);
+  const road = ((al && al.features) || []).map(f => f.properties)
+    .filter(p => WINTRY.test(p.event) || /wind|storm|ice|snow|cold|flood|fog/i.test(p.event));
+  let level = "ok";
+  if (road.some(p => /warning/i.test(p.event) || p.severity === "Severe" || p.severity === "Extreme")) level = "warn";
+  else if (road.length) level = "advisory";
+  return { road, level };
+}
+
+function fillWatch(w, r) {
+  const slot = document.querySelector("#watch-" + w.id + " .wstatus");
+  const meta = { ok: ["🟢", "No active NWS alerts", "ok"],
+    advisory: ["🟡", "Advisory in effect", "advisory"], warn: ["🔴", "Warning in effect", "warn"] }[r.level];
+  slot.innerHTML = `<span class="wbadge ${meta[2]}">${meta[0]} ${meta[1]}</span>` +
+    (r.road.length ? `<div class="alert-banner"><b>${r.road[0].event}</b> ${esc((r.road[0].headline || "").slice(0, 100))}</div>` : "");
+  const m = watchMarkers[w.id];
+  if (m) m.setStyle({ fillColor: r.level === "warn" ? "#ef4b4b" : r.level === "advisory" ? "#f0a830" : "#c678dd" });
+}
+
 function dotUrlFor(state) {
   const map = { OR:"Oregon", ID:"Idaho", UT:"Utah", CO:"Colorado", KS:"Kansas", MO:"Missouri",
     TN:"Tennessee", NC:"North Carolina", SC:"South Carolina", GA:"Georgia", FL:"Florida", WA:"Oregon" };
@@ -231,9 +310,10 @@ function dotUrlFor(state) {
 }
 
 function renderStatic() {
-  $("#watch").innerHTML = WATCH.map(w => `<div class="watch-card">
+  $("#watch").innerHTML = WATCH.map(w => `<div class="watch-card" id="watch-${w.id}">
     <h3>${w.id} · ${w.name} <span class="state">${w.st}</span></h3>
     <div class="elev">▲ ${w.elev}</div>
+    <div class="wstatus"><span class="err"><span class="spin">↻</span> checking NWS…</span></div>
     <p>${w.why}</p>
     <p>🛣 <a href="${w.url}" target="_blank" rel="noopener">${w.src} — live status →</a></p>
   </div>`).join("");
@@ -251,16 +331,28 @@ async function loadWeather() {
   $("#updated").textContent = "fetching live NWS data…";
   const allAlerts = [];
 
-  // Sequential-ish: fire all, settle individually so one failure never blocks the rest.
-  await Promise.all(STOPS.map(async s => {
-    try {
-      const w = await fetchStop(s);
-      const alerts = fillCard(s, w);
-      alerts.forEach(a => allAlerts.push({ s, a }));
-    } catch (e) {
-      failCard(s, e.message);
-    }
-  }));
+  // Fire all, settle individually so one failure never blocks the rest.
+  await Promise.all([
+    ...STOPS.map(async s => {
+      try {
+        const w = await fetchStop(s);
+        const alerts = fillCard(s, w);
+        alerts.forEach(a => allAlerts.push({ s, a }));
+      } catch (e) {
+        failCard(s, e.message);
+      }
+    }),
+    ...WATCH.map(async w => {
+      try {
+        const r = await fetchWatch(w);
+        fillWatch(w, r);
+        r.road.forEach(a => allAlerts.push({ s: { name: w.id + " " + w.name, state: w.st }, a }));
+      } catch (e) {
+        const slot = document.querySelector("#watch-" + w.id + " .wstatus");
+        if (slot) slot.innerHTML = `<span class="err">status check failed — use DOT link</span>`;
+      }
+    }),
+  ]);
 
   // Route-wide alert banner
   const sec = $("#alerts-section"), list = $("#alerts-list");

@@ -14,10 +14,15 @@ A single-page site that tracks daily weather and winter road risk for a
 
 ## What it shows
 
-- **Map** (Leaflet + OpenStreetMap) with the full route, every overnight stop,
-  and the mountain-pass / road-closure watch points (W1–W7). Markers recolor
-  by live conditions: green = fine, amber = cold / snow risk, red = active NWS
-  alert, purple = pass/road watch.
+- **Map** (Leaflet + OpenStreetMap) with the full route, every overnight stop
+  (incl. the **Klamath Falls, OR pickup**), and the mountain-pass / road
+  watch points (W1–W7). Markers recolor by live conditions: green = fine,
+  amber = cold / snow risk, red = active NWS alert, purple = pass/road watch.
+  **Fullscreen** button expands the map to a modal; **Tag** lets you drop your
+  own pins (fuel stops, hazards) — saved in the browser.
+- **Live road monitoring** — each watch point pulls active NWS alerts for its
+  own coordinates and shows 🟢 clear / 🟡 advisory / 🔴 warning, with the DOT
+  link for actual closure status.
 - **Daily weather cards** — current conditions plus the next ~6 forecast
   periods for each stop. Cold legs through **Idaho** and **Colorado** (Boise,
   SLC, Grand Junction, Denver) and the Blue Ridge (Asheville) are flagged
