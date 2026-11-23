@@ -69,6 +69,60 @@ const DOT = [
   { st: "Florida",        src: "FL511",            url: "https://fl511.com/" },
 ];
 
+// Curated iconic + scenic stops per overnight (travel order follows STOPS).
+const PLACES = {
+  "Seattle":        [["🏛","Pike Place Market","The original public market — fishmongers, the first Starbucks."],
+                     ["🌲","Kerry Park","Best skyline + Mt. Rainier viewpoint in the city."],
+                     ["🗼","Space Needle","360° observation deck over Puget Sound."]],
+  "Portland":       [["📚","Powell's City of Books","Largest independent bookstore in the world."],
+                     ["💧","Multnomah Falls","620-ft falls in the Columbia Gorge, just east on I-84."],
+                     ["🍩","Voodoo Doughnut","Portland's cult doughnut shop."]],
+  "Klamath Falls":  [["🏔","Crater Lake NP","Deepest lake in the US — snow-globe rim in winter (check road access)."],
+                     ["🚶","Link River Trail","Easy riverside walk with bird life."],
+                     ["🖼","Favell Museum","Western art & Native American artifacts."]],
+  "Boise":          [["🏛","Idaho State Capitol","Geothermally heated statehouse, free to tour."],
+                     ["🚲","Boise River Greenbelt","25-mi tree-lined path along the river."],
+                     ["⛷","Bogus Basin","Mountain rec area 45 min up — skiing & snow play."]],
+  "Salt Lake City": [["⛪","Temple Square","Historic LDS campus in the city center."],
+                     ["🦬","Antelope Island SP","Bison herds on a Great Salt Lake causeway."],
+                     ["🏔","Cottonwood Canyons","Big & Little Cottonwood — world-class snow 30 min away."]],
+  "Grand Junction": [["🪨","Colorado National Monument","Red-rock canyons & Rim Rock Drive."],
+                     ["🏔","Grand Mesa","Largest flat-top mountain on earth; snowy in winter."],
+                     ["🍷","Downtown Main Street","Walkable art-on-the-corner district & wineries."]],
+  "Denver":         [["🎸","Red Rocks","Amphitheatre in natural red sandstone — free to walk."],
+                     ["🚉","Union Station","Restored rail hall, bars & restaurants."],
+                     ["🏔","Rocky Mountain NP","Alpine park ~1.5 hr NW (winter-limited roads)."]],
+  "Salina":         [["🦁","Rolling Hills Zoo","Well-regarded zoo & wildlife museum."],
+                     ["🏛","Smoky Hill Museum","Free local history museum downtown."]],
+  "St. Louis":      [["🌉","Gateway Arch","630-ft arch with a tram to the top."],
+                     ["🌳","Forest Park","Bigger than Central Park — free zoo & art museum."],
+                     ["🏰","City Museum","Surreal playground built from salvage."]],
+  "Nashville":      [["🎶","Broadway Honky-Tonks","Live music bars end to end."],
+                     ["🎤","Grand Ole Opry","The home of country music."],
+                     ["🏛","Country Music Hall of Fame","The genre's definitive museum."]],
+  "Asheville":      [["🏰","Biltmore Estate","America's largest home, lit for the holidays."],
+                     ["🛣","Blue Ridge Parkway","Mountain overlooks (watch winter closures)."],
+                     ["🎨","River Arts District","Working studios & breweries."]],
+  "Greenville":     [["💧","Falls Park on the Reedy","Downtown waterfall & suspension bridge."],
+                     ["🚲","Swamp Rabbit Trail","Greenway from downtown to Travelers Rest."],
+                     ["🍽","Main Street","Tree-lined, award-winning walkable downtown."]],
+  "Charleston":     [["🌈","Rainbow Row & Battery","Pastel row houses & harborfront promenade."],
+                     ["🏰","Fort Sumter","Ferry to where the Civil War began."],
+                     ["🌳","Waterfront Park","Pineapple fountain & pier swings."]],
+  "Savannah":       [["🌳","Forsyth Park","Spanish-moss oaks & the famous fountain."],
+                     ["🏛","Historic Squares","22 leafy squares to wander."],
+                     ["🚢","River Street","Cobblestone riverfront, shops & candy."]],
+  "St. Augustine":  [["🏰","Castillo de San Marcos","1600s Spanish stone fort on the bay."],
+                     ["🚶","St. George Street","Pedestrian old-town lane."],
+                     ["💡","St. Augustine Lighthouse","Climb for coastal views."]],
+  "Orlando":        [["🎢","Walt Disney World","The big one — four parks."],
+                     ["🧙","Universal Orlando","Harry Potter & thrill rides."],
+                     ["🚀","Kennedy Space Center","Rocket history ~1 hr east on the coast."]],
+  "Miami":          [["🏖","South Beach","Art-deco strip & the ocean — journey's end."],
+                     ["🎨","Wynwood Walls","Open-air street-art district."],
+                     ["🎺","Little Havana / Calle Ocho","Cuban cafés, cigars & domino park."]],
+};
+
 const COLD_HARD = 20;   // °F — hard freeze
 const COLD_FREEZE = 32; // °F — freezing
 const WINTRY = /(snow|sleet|ice|icy|freezing|blizzard|wintry|flurries|wind chill)/i;
@@ -323,6 +377,31 @@ function renderStatic() {
 
   const cards = $("#cards");
   STOPS.forEach(s => cards.appendChild(stopCard(s)));
+
+  renderPlaces();
+}
+
+function renderPlaces() {
+  $("#places").innerHTML = STOPS.filter(s => PLACES[s.name]).map(s => `
+    <div class="place-stop">
+      <h3>${s.name} <span class="state">${s.state}</span> <span class="date">${s.date}</span></h3>
+      <div class="place-grid">${PLACES[s.name].map(([icon, name, blurb]) => `
+        <div class="place">
+          <div class="p-ico">${icon}</div>
+          <div><div class="p-name">${name}</div><div class="p-blurb">${blurb}</div>
+            <a class="p-map" href="https://www.google.com/maps/search/${encodeURIComponent(name + " " + s.name + " " + s.state)}" target="_blank" rel="noopener">Map →</a>
+          </div>
+        </div>`).join("")}</div>
+    </div>`).join("");
+}
+
+function setupTabs(map) {
+  const tabs = document.querySelectorAll(".tab");
+  tabs.forEach(t => t.addEventListener("click", () => {
+    tabs.forEach(x => x.classList.toggle("on", x === t));
+    document.querySelectorAll(".tab-panel").forEach(p => { p.hidden = p.id !== "tab-" + t.dataset.tab; });
+    if (t.dataset.tab === "dashboard") setTimeout(() => map.invalidateSize(), 60);
+  }));
 }
 
 async function loadWeather() {
@@ -386,7 +465,8 @@ if (location.search.includes("selftest")) {
   selftest();
 } else {
   renderStatic();
-  buildMap();
+  const map = buildMap();
+  setupTabs(map);
   loadWeather();
   $("#refresh").addEventListener("click", loadWeather);
 }

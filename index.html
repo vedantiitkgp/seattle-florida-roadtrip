@@ -29,6 +29,12 @@
 </header>
 
 <main class="wrap">
+  <nav class="tabs" role="tablist">
+    <button class="tab on" data-tab="dashboard">🗺 Dashboard</button>
+    <button class="tab" data-tab="places">📍 Trip places</button>
+  </nav>
+
+  <div id="tab-dashboard" class="tab-panel">
   <section id="map-section">
     <div class="map-btns">
       <button id="tag-btn" class="map-btn" title="Click the map to drop your own tags">📌 Tag</button>
@@ -69,6 +75,16 @@
     <h2>State road-condition feeds (511)</h2>
     <div id="dot-list" class="dot-list"></div>
   </section>
+  </div><!-- /tab-dashboard -->
+
+  <div id="tab-places" class="tab-panel" hidden>
+    <section>
+      <h2>Places along the route</h2>
+      <p class="hint">Iconic &amp; scenic stops at each overnight, in travel order — mountain towns,
+        landmarks, and a few detours worth the miles.</p>
+      <div id="places"></div>
+    </section>
+  </div><!-- /tab-places -->
 </main>
 
 <footer class="wrap">
